@@ -21,7 +21,7 @@ public class HomepageController {
     public String homepage(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
-        return "homepage";
+        return "index";
     }
     @PostMapping("/create-user")
     public String createUser(@RequestBody User inputUser){

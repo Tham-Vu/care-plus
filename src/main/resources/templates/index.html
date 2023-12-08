@@ -400,7 +400,7 @@
                        placeholder="Số điện thoại*" />
                 <input class="input" type="text" name="input-service" id="input-service" placeholder="Dịch vụ quan tâm" />
             </form>
-            <button class="register-button" type="submit" onclick="registerNow()">ĐĂNG KÝ NGAY</button>
+            <button class="register-button" type="submit" onclick="registerNow('register-now')">ĐĂNG KÝ NGAY</button>
             <p style="margin-left: auto; margin-right: auto; font-style: italic">
                 (*)Cam kết bảo mật thông tin.
             </p>
@@ -430,7 +430,7 @@
             </div>
             <div class="popup-form-button-group">
                 <buton class="popup-form-btn cancel-button" id="phone-cancel-button" onclick="cancel()">Huỷ</buton>
-                <buton class="popup-form-btn continue-button" id="phone-continue-button" onclick="startVerification()">Tiếp theo</buton>
+                <buton class="popup-form-btn continue-button" id="phone-continue-button" onclick="startVerification('phone-popup')">Tiếp theo</buton>
             </div>
         </div>
     </div>
@@ -463,9 +463,16 @@
             <p>Đăng ký thành công</p>
         </div>
     </div>
+    <div class="popup popup-success" id="popup-failed">
+        <div class="popup-success-container">
+            <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
+            <p>Có lỗi xảy ra</p>
+        </div>
+    </div>
 </div>
 <script lang="javascript">
-    let otpCode;
+    let popupOrigin = "";
+    let otpCode = "";
     let phoneInputForm = document.getElementById("phone");
     let otpCodeInput = document.getElementById("otp-code");
     window.addEventListener('DOMContentLoaded', function () {
@@ -496,14 +503,16 @@
         document.getElementById('popup-enter-phone').style.display = 'block';
         document.getElementById('popup-enter-otp').style.display = 'none';
         document.getElementById("popup-success").style.display = 'none';
+        document.getElementById("popup-failed").style.display = 'none';
     }
 
 <!--    băt đầu gửi mã OTP-->
-    function startVerification() {
+    function startVerification(origin) {
       let phoneInput = document.getElementById("phone").value;
       if (phoneInput !== '') {
         otpCode = createOTP();
         sendOTP(phoneInput,otpCode);
+        popupOrigin = origin;
         document.getElementById("popup-enter-phone").style.display = 'none';
         document.getElementById("popup-enter-otp").style.display = 'block';
         console.log(otpCode)
@@ -526,36 +535,31 @@
     }
 
 <!--    Kiểm tra mã OTP-->
-    function checkOTP(event) {
-        let phoneInput;
-        let buttonId = event.target.id;
-        console.log(buttonId);
-        phoneInput = document.getElementById("phone").value;
-        checkAndSaveOTP(phoneInput);
-    }
-    function checkAndSaveOTP(phoneNumber){
+    function checkAndSaveOTP(){
         let otpInput = document.getElementById("otp-code").value;
-<!--        let user;-->
-<!--        if (isHomePage === 'true') {-->
-<!--            let nameInput = document.getElementById("input-name").value;-->
-<!--            let serviceInput = document.getElementById("input-service").value;-->
-<!--            user = {-->
-<!--                name: nameInput,-->
-<!--                phone: phoneNumber,-->
-<!--                otpCode: otpCode,-->
-<!--                services: serviceInput-->
-<!--            }-->
-<!--        } else if(isHomePage === 'false'){-->
-            let user = {
-                phone: phoneNumber,
+        let user;
+        if (popupOrigin === 'register-now') {
+            console.log('register-now');
+            let nameInput = document.getElementById("input-name").value;
+            let serviceInput = document.getElementById("input-service").value;
+            let phoneInput = document.getElementById("input-phone").value;
+            user = {
+                name: nameInput,
+                phoneNumber: phoneInput,
+                otpCode: otpInput,
+                services: serviceInput
+            }
+        } else if(popupOrigin === 'phone-popup'){
+            console.log('phone-popup')
+            let phone = document.getElementById("phone").value;
+            user = {
+                phoneNumber: phone,
                 otpCode: otpCode,
             }
-            console.log(user);
-<!--        }-->
+        }
+        console.log(user);
         if (otpInput === otpCode) {
         saveUserData(user);
-        document.getElementById("popup-success").style.display = 'block';
-        document.getElementById("popup-enter-otp").style.display = 'none';
         } else {
           document.getElementById("wrong-otp-warning").style.display = 'block';
           document.getElementById('otp-code').value = '';
@@ -572,16 +576,21 @@
           })
           .then(response => {
             if (response.ok) {
-              console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
+                console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
+                document.getElementById("popup-success").style.display = 'block';
+                document.getElementById("popup-failed").style.display = 'none';
+                document.getElementById("popup-enter-otp").style.display = 'none';
             } else {
-              console.log('Có lỗi xảy ra khi gửi dữ liệu');
+                document.getElementById("popup-success").style.display = 'none';
+                document.getElementById("popup-failed").style.display = 'none';
+                document.getElementById("popup-enter-otp").style.display = 'block';
             }
           })
           .catch(error => {
             console.error('Lỗi:', error);
           });
     }
-    function registerNow(){
+    function registerNow(origin){
         let nameInput = document.getElementById("input-name").value;
         let phoneInput = document.getElementById("input-phone").value;
         let serviceInput = document.getElementById("input-service").value;
