@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
     @import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300&display=swap");
 
     :root {
@@ -346,30 +346,30 @@
 </head>
 
 <body>
-<header>
+  <header>
     <div class="logo-container">
-        <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="Logo" class="logo" />
+      <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="Logo" class="logo" />
     </div>
     <div class="nav-container">
-        <nav>
-            <ul class="nav-items">
-                <li class="services"><a href="">GÓI KHÁM</a></li>
-                <li class="doctors"><a href="">BÁC SĨ</a></li>
-                <li class="address"><a href="">ĐỊA CHỈ</a></li>
-                <li class="feedback"><a href="">PHẢN HỒI</a></li>
-            </ul>
-        </nav>
-        <button class="consult-button" id="consult-button" onclick="togglePopup()">
-            TƯ VẤN NGAY
-        </button>
-        <div class="nav-toggle">
-            <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
-                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
-                 xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px"
-                 viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%" class="" fill="rgba(0, 0, 0, 1)">
-                <g transform="translate(0,-952.36218)">
-                    <path style="
+      <nav>
+        <ul class="nav-items">
+          <li class="services"><a href="">GÓI KHÁM</a></li>
+          <li class="doctors"><a href="">BÁC SĨ</a></li>
+          <li class="address"><a href="">ĐỊA CHỈ</a></li>
+          <li class="feedback"><a href="">PHẢN HỒI</a></li>
+        </ul>
+      </nav>
+      <button class="consult-button" id="consult-button" onclick="togglePopup()">
+        TƯ VẤN NGAY
+      </button>
+      <div class="nav-toggle">
+        <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
+          xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+          xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px"
+          viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%" class="" fill="rgba(0, 0, 0, 1)">
+          <g transform="translate(0,-952.36218)">
+            <path style="
                   text-indent: 0;
                   text-transform: none;
                   direction: ltr;
@@ -378,99 +378,100 @@
                   color: #000000;
                   enable-background: accumulate;
                 "
-                          d="m 17.29343,976.00469 a 3.0040663,3.0040663 0 1 0 0.3125,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0,23.375 a 3.0040663,3.0040663 0 1 0 0.3125,6.00001 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6.00001 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0.3125,23.34371 a 3.0003,3.0003 0 1 0 0,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 z"
-                          fill-opacity="1" fill-rule="nonzero" stroke="none" marker="none" visibility="visible" display="inline"
-                          overflow="visible"></path>
-                </g>
-            </svg>
-        </div>
+              d="m 17.29343,976.00469 a 3.0040663,3.0040663 0 1 0 0.3125,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0,23.375 a 3.0040663,3.0040663 0 1 0 0.3125,6.00001 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6.00001 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0.3125,23.34371 a 3.0003,3.0003 0 1 0 0,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 z"
+              fill-opacity="1" fill-rule="nonzero" stroke="none" marker="none" visibility="visible" display="inline"
+              overflow="visible"></path>
+          </g>
+        </svg>
+      </div>
     </div>
-</header>
-<section class="register-form-section">
+  </header>
+  <section class="register-form-section">
     <div class="banner-background"></div>
     <div class="register-form-banner"></div>
     <div class="register-form-container">
-        <div class="register-form-title">
-            <p>Đăng ký</p>
-        </div>
-        <div class="form-container">
-            <form action="submit">
-                <input class="input" required type="text" name="input-name" id="input-name" placeholder="Tên*" />
-                <input class="input" required type="number" name="input-phone" id="input-phone"
-                       placeholder="Số điện thoại*" />
-                <input class="input" type="text" name="input-service" id="input-service" placeholder="Dịch vụ quan tâm" />
-            </form>
-            <button class="register-button" type="submit" onclick="registerNow('register-now')">ĐĂNG KÝ NGAY</button>
-            <p style="margin-left: auto; margin-right: auto; font-style: italic">
-                (*)Cam kết bảo mật thông tin.
-            </p>
-        </div>
+      <div class="register-form-title">
+        <p>Đăng ký</p>
+      </div>
+      <div class="form-container">
+        <form action="submit">
+          <input class="input" required type="text" name="input-name" id="input-name" placeholder="Tên*" />
+          <input class="input" required type="number" name="input-phone" id="input-phone"
+            placeholder="Số điện thoại*" />
+          <input class="input" type="text" name="input-service" id="input-service" placeholder="Dịch vụ quan tâm" />
+        </form>
+        <button class="register-button" type="submit" onclick="registerNow('register-now')">ĐĂNG KÝ NGAY</button>
+        <p style="margin-left: auto; margin-right: auto; font-style: italic">
+          (*)Cam kết bảo mật thông tin.
+        </p>
+      </div>
     </div>
-</section>
-<div class="modal-container" id="modal-container">
+  </section>
+  <div class="modal-container" id="modal-container">
     <div class="overlay" id="overlay" onclick="offModal()"></div>
     <div class="popup popup-enter-phone" id="popup-enter-phone">
-        <div class="popup-container">
-            <div class="phone-graphic-header">
-                <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
-                <div class="notification">
-                    <h4>Vui lòng nhập số điện thoại để xác thực và đăng ký</h4>
-                </div>
-            </div>
-            <div class="phone-input-container">
-                    <input required type="text" name="phoneNumber" id="phone" placeholder="Số điện thoại của bạn" aria-invalid="true"
-                           inputmode="numeric" pattern="[0-9]*" value />
-                <p class="warning invalid-phone-warning" id="invalid-phone-warning">Vui lòng nhập số điện thoại</p>
-            </div>
-            <div class="policy-notification">
+      <div class="popup-container">
+        <div class="phone-graphic-header">
+          <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
+          <div class="notification">
+            <h4>Vui lòng nhập số điện thoại để xác thực và đăng ký</h4>
+          </div>
+        </div>
+        <div class="phone-input-container">
+          <input required type="text" name="phoneNumber" id="phone" placeholder="Số điện thoại của bạn"
+            aria-invalid="true" inputmode="numeric" pattern="[0-9]*" value />
+          <p class="warning invalid-phone-warning" id="invalid-phone-warning">Vui lòng nhập số điện thoại</p>
+        </div>
+        <div class="policy-notification">
           <span class="policy">Bằng việc nhập số điện thoại, bạn xác nhận đồng ý và hiểu rõ về
             <a class="term-of -serviec">Điều khoản sử dụng dịch vụ</a> và
             <a class="conditions">Điều kiện điều khoản về bảo vệ dữ liệu cá nhân</a>
             của chúng tôi.</span>
-            </div>
-            <div class="popup-form-button-group">
-                <buton class="popup-form-btn cancel-button" id="phone-cancel-button" onclick="cancel()">Huỷ</buton>
-                <buton class="popup-form-btn continue-button" id="phone-continue-button" onclick="startVerification('phone-popup')">Tiếp theo</buton>
-            </div>
         </div>
+        <div class="popup-form-button-group">
+          <buton class="popup-form-btn cancel-button" id="phone-cancel-button" onclick="cancel()">Huỷ</buton>
+          <buton class="popup-form-btn continue-button" id="phone-continue-button"
+            onclick="startVerification('phone-popup')">Tiếp theo</buton>
+        </div>
+      </div>
     </div>
     <div class="popup popup-enter-otp" id="popup-enter-otp">
-        <div class="popup-container">
-            <div class="phone-graphic-header">
-                <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
-                <div class="notification">
-                    <h4>Vui lòng nhập mã OTP được gửi vào số điện thoại</h4>
-                </div>
-            </div>
-            <div class="phone-input-container">
-                <p class="warning wrong-otp-warning" id="wrong-otp-warning">Mã OTP không đúng. Vui lòng nhập lại!</p>
-                    <input required type="text" name="otpCode" id="otp-code" placeholder="Mã OTP" aria-invalid="true"
-                           inputmode="numeric" pattern="[0-9]*" value />
-                <p class="warning invalid-otp-warning">Vui lòng nhập mã OTP</p>
-                <p class="resend-otp-notification">
-                    Không nhận được mã. <b style="cursor: pointer;" onclick="resendOTP()">Gửi lại</b>
-                </p>
-                <div class="popup-form-button-group">
-                    <buton class="popup-form-btn cancel-button" id="otp-cancel-button" onclick="cancel()">Huỷ</buton>
-                    <buton class="popup-form-btn send-button" id="otp-send-button" onclick="checkOTP(event)">Gửi</buton>
-                </div>
-            </div>
+      <div class="popup-container">
+        <div class="phone-graphic-header">
+          <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
+          <div class="notification">
+            <h4>Vui lòng nhập mã OTP được gửi vào số điện thoại</h4>
+          </div>
         </div>
+        <div class="phone-input-container">
+          <p class="warning wrong-otp-warning" id="wrong-otp-warning">Mã OTP không đúng. Vui lòng nhập lại!</p>
+          <input required type="text" name="otpCode" id="otp-code" placeholder="Mã OTP" aria-invalid="true"
+            inputmode="numeric" pattern="[0-9]*" value />
+          <p class="warning invalid-otp-warning">Vui lòng nhập mã OTP</p>
+          <p class="resend-otp-notification">
+            Không nhận được mã. <b style="cursor: pointer;" onclick="resendOTP()">Gửi lại</b>
+          </p>
+          <div class="popup-form-button-group">
+            <buton class="popup-form-btn cancel-button" id="otp-cancel-button" onclick="cancel()">Huỷ</buton>
+            <buton class="popup-form-btn send-button" id="otp-send-button" onclick="checkAndSaveOTP()">Gửi</buton>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="popup popup-success" id="popup-success">
-        <div class="popup-success-container">
-            <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
-            <p>Đăng ký thành công</p>
-        </div>
+      <div class="popup-success-container">
+        <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
+        <p>Đăng ký thành công</p>
+      </div>
     </div>
     <div class="popup popup-success" id="popup-failed">
-        <div class="popup-success-container">
-            <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
-            <p>Có lỗi xảy ra</p>
-        </div>
+      <div class="popup-success-container">
+        <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
+        <p>Có lỗi xảy ra</p>
+      </div>
     </div>
-</div>
-<script lang="javascript">
+  </div>
+  <script lang="javascript">
     let popupOrigin = "";
     let otpCode = "";
     let phoneInputForm = document.getElementById("phone");
@@ -496,22 +497,26 @@
       document.getElementById('modal-container').style.display = 'none';
     }
     function togglePopup() {
-        console.log("isClick");
-        phoneInputForm.value = '';
-        otpCodeInput.value = '';
-        document.getElementById('modal-container').style.display = 'block';
-        document.getElementById('popup-enter-phone').style.display = 'block';
-        document.getElementById('popup-enter-otp').style.display = 'none';
-        document.getElementById("popup-success").style.display = 'none';
-        document.getElementById("popup-failed").style.display = 'none';
+      console.log("isClick");
+      phoneInputForm.value = '';
+      otpCodeInput.value = '';
+      document.getElementById('modal-container').style.display = 'block';
+      document.getElementById('popup-enter-phone').style.display = 'block';
+      document.getElementById('popup-enter-otp').style.display = 'none';
+      document.getElementById("popup-success").style.display = 'none';
+      document.getElementById("popup-failed").style.display = 'none';
     }
 
-<!--    băt đầu gửi mã OTP-->
+    <!--    băt đầu gửi mã OTP-->
     function startVerification(origin) {
+      let data = {
+        'phone_number': '',
+        'package_name': ''
+      }
       let phoneInput = document.getElementById("phone").value;
       if (phoneInput !== '') {
-        otpCode = createOTP();
-        sendOTP(phoneInput,otpCode);
+        otpCode = createOTP(data);
+        sendOTP(phoneInput, otpCode);
         popupOrigin = origin;
         document.getElementById("popup-enter-phone").style.display = 'none';
         document.getElementById("popup-enter-otp").style.display = 'block';
@@ -522,98 +527,104 @@
       return otpCode;
     }
 
-<!--    Tạo mã OTP ngẫu nhiên -->
-    function createOTP() {
-      let randomNumber = Math.floor(Math.random() * 1000000);
-      let randomOTP = randomNumber.toString().padStart(6, '0');
-      return randomOTP;
+    // <!--    Tạo mã OTP ngẫu nhiên -->
+    function createOTP(data) {
+      // let randomNumber = Math.floor(Math.random() * 1000000);
+      // let randomOTP = randomNumber.toString().padStart(6, '0');
+      // return randomOTP;
+      fetch('http://localhost:7020/api/v1/package/register', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        }, body: JSON.stringify(data)
+      })
     }
 
-<!--    Gưi mã OTP đến phoneNum-->
-    function sendOTP(phoneNumber, otpCode){
-        console.log('Mã OTP đã được gửi đến số điện thoại ' + phoneNumber);
+    // <!--    Gưi mã OTP đến phoneNum-->
+    function sendOTP(phoneNumber, otpCode) {
+      console.log('Mã OTP đã được gửi đến số điện thoại ' + phoneNumber);
     }
 
-<!--    Kiểm tra mã OTP-->
-    function checkAndSaveOTP(){
-        let otpInput = document.getElementById("otp-code").value;
-        let user;
-        if (popupOrigin === 'register-now') {
-            console.log('register-now');
-            let nameInput = document.getElementById("input-name").value;
-            let serviceInput = document.getElementById("input-service").value;
-            let phoneInput = document.getElementById("input-phone").value;
-            user = {
-                name: nameInput,
-                phoneNumber: phoneInput,
-                otpCode: otpInput,
-                services: serviceInput
-            }
-        } else if(popupOrigin === 'phone-popup'){
-            console.log('phone-popup')
-            let phone = document.getElementById("phone").value;
-            user = {
-                phoneNumber: phone,
-                otpCode: otpCode,
-            }
-        }
-        console.log(user);
-        if (otpInput === otpCode) {
-        saveUserData(user);
-        } else {
-          document.getElementById("wrong-otp-warning").style.display = 'block';
-          document.getElementById('otp-code').value = '';
-        }
-     }
-<!--    Lưu dữ liệu vào database-->
-    function saveUserData(data){
-        fetch('http://localhost:8080/create-user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          })
-          .then(response => {
-            if (response.ok) {
-                console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
-                document.getElementById("popup-success").style.display = 'block';
-                document.getElementById("popup-failed").style.display = 'none';
-                document.getElementById("popup-enter-otp").style.display = 'none';
-            } else {
-                document.getElementById("popup-success").style.display = 'none';
-                document.getElementById("popup-failed").style.display = 'none';
-                document.getElementById("popup-enter-otp").style.display = 'block';
-            }
-          })
-          .catch(error => {
-            console.error('Lỗi:', error);
-          });
-    }
-    function registerNow(origin){
+    // <!--    Kiểm tra mã OTP-->
+    function checkAndSaveOTP() {
+      let otpInput = document.getElementById("otp-code").value;
+      let user;
+      if (popupOrigin === 'register-now') {
+        console.log('register-now');
         let nameInput = document.getElementById("input-name").value;
-        let phoneInput = document.getElementById("input-phone").value;
         let serviceInput = document.getElementById("input-service").value;
-        if (phoneInput !== '') {
-            otpCode = createOTP();
-            console.log(otpCode);
-            sendOTP(phoneInput,otpCode);
-            otpCodeInput.value = '';
-            document.getElementById("modal-container").style.display = 'block';
-            document.getElementById("popup-enter-phone").style.display = 'none';
-            document.getElementById("popup-enter-otp").style.display = 'block';
-            document.getElementById("popup-success").style.display = 'none';
+        let phoneInput = document.getElementById("input-phone").value;
+        user = {
+          name: nameInput,
+          phoneNumber: phoneInput,
+          otpCode: otpInput,
+          services: serviceInput
         }
+      } else if (popupOrigin === 'phone-popup') {
+        console.log('phone-popup')
+        let phone = document.getElementById("phone").value;
+        user = {
+          phoneNumber: phone,
+          otpCode: otpCode,
+        }
+      }
+      console.log(user);
+      if (otpInput === otpCode) {
+        saveUserData(user);
+      } else {
+        document.getElementById("wrong-otp-warning").style.display = 'block';
+        document.getElementById('otp-code').value = '';
+      }
     }
-<!--    Resend-->
+    // <!--    Lưu dữ liệu vào database-->
+    function saveUserData(data) {
+      fetch('http://localhost:8080/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
+            document.getElementById("popup-success").style.display = 'block';
+            document.getElementById("popup-failed").style.display = 'none';
+            document.getElementById("popup-enter-otp").style.display = 'none';
+          } else {
+            document.getElementById("popup-success").style.display = 'none';
+            document.getElementById("popup-failed").style.display = 'none';
+            document.getElementById("popup-enter-otp").style.display = 'block';
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi:', error);
+        });
+    }
+    function registerNow(origin) {
+      let nameInput = document.getElementById("input-name").value;
+      let phoneInput = document.getElementById("input-phone").value;
+      let serviceInput = document.getElementById("input-service").value;
+      if (phoneInput !== '') {
+        otpCode = createOTP();
+        console.log(otpCode);
+        sendOTP(phoneInput, otpCode);
+        otpCodeInput.value = '';
+        document.getElementById("modal-container").style.display = 'block';
+        document.getElementById("popup-enter-phone").style.display = 'none';
+        document.getElementById("popup-enter-otp").style.display = 'block';
+        document.getElementById("popup-success").style.display = 'none';
+      }
+    }
+    // <!--    Resend-->
     function resendOTP() {
-    let phoneInput = document.getElementById("phone").value;
+      let phoneInput = document.getElementById("phone").value;
       otpCode = createOTP();
       sendOTP(phoneInput, otpCode);
     }
-<!--    Cancel-->
-    function cancel(){
-      document.getElementById("modal-container").style.display= "none";
+    // <!--    Cancel-->
+    function cancel() {
+      document.getElementById("modal-container").style.display = "none";
     }
   </script>
 </body>
