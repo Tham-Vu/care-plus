@@ -508,16 +508,17 @@
     }
 
     <!--    băt đầu gửi mã OTP-->
-    function startVerification(origin) {
+    function startVerification() {
+      let phoneInput = document.getElementById('phone').value;
       let data = {
-        'phone_number': '',
-        'package_name': ''
+        'phone_number': phoneInput,
+        'package_name': null
       }
-      let phoneInput = document.getElementById("phone").value;
       if (phoneInput !== '') {
-        otpCode = createOTP(data);
-        sendOTP(phoneInput, otpCode);
-        popupOrigin = origin;
+        //đăng ký tạo OTP bằng số điện thoại
+        createOTP(data);
+        //lấy mã OTP
+        otpCode = sendOTP(data.phone_number);
         document.getElementById("popup-enter-phone").style.display = 'none';
         document.getElementById("popup-enter-otp").style.display = 'block';
         console.log(otpCode)
@@ -527,25 +528,68 @@
       return otpCode;
     }
 
-    // <!--    Tạo mã OTP ngẫu nhiên -->
-    function createOTP(data) {
-      // let randomNumber = Math.floor(Math.random() * 1000000);
-      // let randomOTP = randomNumber.toString().padStart(6, '0');
-      // return randomOTP;
-      fetch('http://localhost:7020/api/v1/package/register', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        }, body: JSON.stringify(data)
-      })
+    // <!--     tạo OTP bằng số điện thoại -->
+    async function createOTP(data) {
+      console.log("data", data)
+      try {
+        const response = await ('http://localhost:8080/api/v1/package/register', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          }, 
+          body: JSON.stringify(data)
+        }).then(response => {
+          console.log("response", response)
+        }).catch(error => {
+          console.log("error", error)
+        })
+      }catch(error){
+        console.error(error)
+      }
     }
 
     // <!--    Gưi mã OTP đến phoneNum-->
-    function sendOTP(phoneNumber, otpCode) {
-      console.log('Mã OTP đã được gửi đến số điện thoại ' + phoneNumber);
+    async function sendOTP(phoneNumber) {
+      try{
+        console.log('phoneNumber', phoneNumber)
+        let data = {
+          'msisdn': phoneNumber
+        }
+        console.log("data", data)
+        await fetch('http://localhost:8080/api/v1/sps/internal/package/getOTP', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          }, body: JSON.stringify(data)
+        }).then(response => {
+  
+        }).catch(error => {
+          alert(error)
+        });
+        console.log('Mã OTP đã được gửi đến số điện thoại ' + phoneNumber);
+      }catch(error){
+        console.error(error)
+      }
     }
+    
 
-    // <!--    Kiểm tra mã OTP-->
+    // <!--    confirm OTP-->
+    function confirmOTP(){
+      let data = {
+
+      }
+      fetch('http://localhost:8080/api/v1/package/confirm', {
+        method: POST,
+        headers: {
+          "Conrent-type": "application/json"
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
+
+      }).catch(error => {
+        document.getElementById("popup-failed").style.display = 'block';
+      })
+    }
     function checkAndSaveOTP() {
       let otpInput = document.getElementById("otp-code").value;
       let user;
