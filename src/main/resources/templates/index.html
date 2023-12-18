@@ -238,6 +238,7 @@
       border-radius: 20px;
       background-color: var(--background-form-color);
       box-shadow: var(--background-form-shadow);
+      display: none;
     }
 
     .popup-enter-otp {
@@ -280,7 +281,7 @@
     }
 
     #phone,
-    #otp-code {
+    #otp-code, #name, #dateOfBirth {
       width: 416px;
       height: 19px;
       padding: 18.5px 14px;
@@ -341,6 +342,39 @@
       background-color: white;
       border: 1px solid var(--button-background-color);
       color: var(--button-background-color);
+    }
+    .loading-container{
+      display: none;
+    }
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
@@ -408,6 +442,11 @@
     </div>
   </section>
   <div class="modal-container" id="modal-container">
+    <div class="loading-container">
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
     <div class="overlay" id="overlay" onclick="offModal()"></div>
     <div class="popup popup-enter-phone" id="popup-enter-phone">
       <div class="popup-container">
@@ -453,7 +492,45 @@
           </p>
           <div class="popup-form-button-group">
             <buton class="popup-form-btn cancel-button" id="otp-cancel-button" onclick="cancel()">Huỷ</buton>
-            <buton class="popup-form-btn send-button" id="otp-send-button" onclick="checkAndSaveOTP()">Gửi</buton>
+            <buton class="popup-form-btn send-button" id="otp-send-button" onclick="confirmOTP()">Gửi</buton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup popup-enter-name" id="popup-enter-name">
+      <div class="popup-container">
+        <div class="phone-graphic-header">
+          <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
+          <div class="notification">
+            <h4>Vui lòng cho chúng tôi biết họ và tên của bạn</h4>
+          </div>
+        </div>
+        <div class="phone-input-container">
+          <input required type="text" name="name" id="name" placeholder="Họ và tên" aria-invalid="true"
+            inputmode="text" value />
+          <p class="warning invalid-otp-warning">Kiểm tra lại họ và tên của bạn</p>
+          <div class="popup-form-button-group">
+            <buton class="popup-form-btn cancel-button" id="name-cancel-button" onclick="cancel()">Huỷ</buton>
+            <buton class="popup-form-btn send-button" id="name-continue-button" onclick="fillDateOfBirth()">Tiếp tục</buton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup popup-enter-dateOfBirth" id="popup-enter-dateOfBirth">
+      <div class="popup-container">
+        <div class="phone-graphic-header">
+          <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
+          <div class="notification">
+            <h4>Vui lòng nhập ngày sinh</h4>
+          </div>
+        </div>
+        <div class="phone-input-container">
+          <input required type="date" name="dateOfBirth" id="dateOfBirth" placeholder="DD/mm/yyyy" aria-invalid="true"
+           value />
+          <p class="warning invalid-otp-warning">Kiểm tra lại ngày sinh của bạn</p>
+          <div class="popup-form-button-group">
+            <buton class="popup-form-btn cancel-button" id="dateOfBirth-cancel-button" onclick="cancel()">Huỷ</buton>
+            <buton class="popup-form-btn send-button" id="dateOfBirth-continue-button" onclick="confirm()">Tiếp tục</buton>
           </div>
         </div>
       </div>
@@ -500,28 +577,35 @@
       console.log("isClick");
       phoneInputForm.value = '';
       otpCodeInput.value = '';
-      document.getElementById('modal-container').style.display = 'block';
-      document.getElementById('popup-enter-phone').style.display = 'block';
-      document.getElementById('popup-enter-otp').style.display = 'none';
-      document.getElementById("popup-success").style.display = 'none';
-      document.getElementById("popup-failed").style.display = 'none';
+      displayPopup("popup-enter-phone");
     }
 
     <!--    băt đầu gửi mã OTP-->
-    function startVerification() {
+    async function startVerification() {
       let phoneInput = document.getElementById('phone').value;
+      sessionStorage.setItem("phoneInput", phoneInput);
       let data = {
         'phone_number': phoneInput,
         'package_name': null
       }
+      sessionStorage.setItem("data", JSON.stringify(data))
       if (phoneInput !== '') {
-        //đăng ký tạo OTP bằng số điện thoại
-        createOTP(data);
-        //lấy mã OTP
-        otpCode = sendOTP(data.phone_number);
-        document.getElementById("popup-enter-phone").style.display = 'none';
-        document.getElementById("popup-enter-otp").style.display = 'block';
-        console.log(otpCode)
+        try {
+          showLoading();
+
+          const createOTPResponse = await createOTP(data);
+          console.log("createOTPResponse", createOTPResponse);
+
+          const otpCode = await sendOTP(data.phone_number);
+          console.log("otpCode", otpCode);
+
+          hideLoading(); 
+        }catch(error){
+          console.error(error);
+          throw error;
+          displayPopup("popup-failed");
+        }
+        displayPopup("popup-enter-otp")
       } else {
         document.getElementById("invalid-phone-warning").style.display = 'block';
       }
@@ -532,19 +616,17 @@
     async function createOTP(data) {
       console.log("data", data)
       try {
-        const response = await ('http://localhost:8080/api/v1/package/register', {
+        const response = await fetch('http://localhost:8080/api/v1/package/register', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json'
           }, 
           body: JSON.stringify(data)
-        }).then(response => {
-          console.log("response", response)
-        }).catch(error => {
-          console.log("error", error)
         })
+        return response;
       }catch(error){
-        console.error(error)
+        console.error(error);
+        throw error;
       }
     }
 
@@ -556,119 +638,166 @@
           'msisdn': phoneNumber
         }
         console.log("data", data)
-        await fetch('http://localhost:8080/api/v1/sps/internal/package/getOTP', {
+        const otpResponse = await fetch('http://localhost:8080/api/v1/sps/internal/package/getOTP', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json'
           }, body: JSON.stringify(data)
-        }).then(response => {
-  
-        }).catch(error => {
-          alert(error)
         });
-        console.log('Mã OTP đã được gửi đến số điện thoại ' + phoneNumber);
+        return otpResponse;
       }catch(error){
-        console.error(error)
+        console.error(error);
+        throw error;
       }
     }
     
 
     // <!--    confirm OTP-->
     function confirmOTP(){
-      let data = {
-
-      }
-      fetch('http://localhost:8080/api/v1/package/confirm', {
-        method: POST,
-        headers: {
-          "Conrent-type": "application/json"
-        },
-        body: JSON.stringify(data)
-      }).then(response => {
-
-      }).catch(error => {
-        document.getElementById("popup-failed").style.display = 'block';
-      })
-    }
-    function checkAndSaveOTP() {
-      let otpInput = document.getElementById("otp-code").value;
-      let user;
-      if (popupOrigin === 'register-now') {
-        console.log('register-now');
-        let nameInput = document.getElementById("input-name").value;
-        let serviceInput = document.getElementById("input-service").value;
-        let phoneInput = document.getElementById("input-phone").value;
-        user = {
-          name: nameInput,
-          phoneNumber: phoneInput,
-          otpCode: otpInput,
-          services: serviceInput
+      const otpInput = document.getElementById("otp-code").value;
+      let phone = sessionStorage.getItem("phoneInput")
+      if (otpInput === ''|| otpInput !== '1111'){
+        document.getElementById("wrong-otp-warning").style.display = 'block'
+      }else{
+        let data = {
+          "phone_number" : phone,
+          "otp": otpInput
         }
-      } else if (popupOrigin === 'phone-popup') {
-        console.log('phone-popup')
-        let phone = document.getElementById("phone").value;
-        user = {
-          phoneNumber: phone,
-          otpCode: otpCode,
-        }
-      }
-      console.log(user);
-      if (otpInput === otpCode) {
-        saveUserData(user);
-      } else {
-        document.getElementById("wrong-otp-warning").style.display = 'block';
-        document.getElementById('otp-code').value = '';
-      }
-    }
-    // <!--    Lưu dữ liệu vào database-->
-    function saveUserData(data) {
-      fetch('http://localhost:8080/create-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
-            document.getElementById("popup-success").style.display = 'block';
-            document.getElementById("popup-failed").style.display = 'none';
-            document.getElementById("popup-enter-otp").style.display = 'none';
-          } else {
-            document.getElementById("popup-success").style.display = 'none';
-            document.getElementById("popup-failed").style.display = 'none';
-            document.getElementById("popup-enter-otp").style.display = 'block';
-          }
+        fetch('http://localhost:8080/api/v1/package/confirm', {
+          method: 'POST',
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify(data)
+        }).then(response => {
+          displayPopup("popup-enter-name");
+        }).catch(error => {
+          document.getElementById("popup-failed").style.display = 'block';
         })
-        .catch(error => {
-          console.error('Lỗi:', error);
-        });
+      }
     }
-    function registerNow(origin) {
+    // function checkAndSaveOTP() {
+    //   let otpInput = document.getElementById("otp-code").value;
+    //   let user;
+    //   if (popupOrigin === 'register-now') {
+    //     console.log('register-now');
+    //     let nameInput = document.getElementById("input-name").value;
+    //     let serviceInput = document.getElementById("input-service").value;
+    //     let phoneInput = document.getElementById("input-phone").value;
+    //     user = {
+    //       name: nameInput,
+    //       phoneNumber: phoneInput,
+    //       otpCode: otpInput,
+    //       services: serviceInput
+    //     }
+    //   } else if (popupOrigin === 'phone-popup') {
+    //     console.log('phone-popup')
+    //     let phone = document.getElementById("phone").value;
+    //     user = {
+    //       phoneNumber: phone,
+    //       otpCode: otpCode,
+    //     }
+    //   }
+    //   console.log(user);
+    //   if (otpInput === otpCode) {
+    //     saveUserData(user);
+    //   } else {
+    //     document.getElementById("wrong-otp-warning").style.display = 'block';
+    //     document.getElementById('otp-code').value = '';
+    //   }
+    // }
+    // <!--    Lưu dữ liệu vào database-->
+    // function saveUserData(data) {
+    //   fetch('http://localhost:8080/create-user', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(data)
+    //   })
+    //     .then(response => {
+    //       if (response.ok) {
+    //         console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
+    //         document.getElementById("popup-success").style.display = 'block';
+    //         document.getElementById("popup-failed").style.display = 'none';
+    //         document.getElementById("popup-enter-otp").style.display = 'none';
+    //       } else {
+    //         document.getElementById("popup-success").style.display = 'none';
+    //         document.getElementById("popup-failed").style.display = 'none';
+    //         document.getElementById("popup-enter-otp").style.display = 'block';
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.error('Lỗi:', error);
+    //     });
+    // }
+    async function registerNow(origin) {
       let nameInput = document.getElementById("input-name").value;
       let phoneInput = document.getElementById("input-phone").value;
       let serviceInput = document.getElementById("input-service").value;
+      sessionStorage.setItem("phoneInput", phoneInput)
       if (phoneInput !== '') {
-        otpCode = createOTP();
-        console.log(otpCode);
-        sendOTP(phoneInput, otpCode);
-        otpCodeInput.value = '';
-        document.getElementById("modal-container").style.display = 'block';
-        document.getElementById("popup-enter-phone").style.display = 'none';
-        document.getElementById("popup-enter-otp").style.display = 'block';
-        document.getElementById("popup-success").style.display = 'none';
+        let data = {
+          "phone_number": phoneInput,
+          "package_name": serviceInput
+        }
+        sessionStorage.setItem("data", JSON.stringify(data))
+        try {
+          const createOTPResponse = await createOTP(data);
+          console.log("createOTPResponse", createOTPResponse);
+          const otpCode = await sendOTP(data.phone_number);
+          console.log("otpCode", otpCode);
+        }catch(error){
+          console.error(error);
+          throw error;
+          displayPopup("popup-failed");
+        }
+        displayPopup("popup-enter-otp")
+      }else{
+        displayPopup("popup-failed");
       }
     }
+    function fillDateOfBirth(){
+      displayPopup("popup-enter-dateOfBirth");
+    }
+    function confirm(){
+      displayPopup("popup-success")
+    }
     // <!--    Resend-->
-    function resendOTP() {
-      let phoneInput = document.getElementById("phone").value;
-      otpCode = createOTP();
-      sendOTP(phoneInput, otpCode);
+    async function resendOTP() {
+      let phone = sessionStorage.getItem("phoneInput");
+      let sessionData = sessionStorage.getItem("data");
+      console.log("phone", phone);
+      let data = {
+        "phone_number": phone,
+        "package": sessionData.package_name
+      }
+      try {
+          const createOTPResponse = await createOTP(data);
+          console.log("createOTPResponse", createOTPResponse);
+          const otpCode = await sendOTP(data.phone_number);
+          console.log("otpCode", otpCode);
+        }catch(error){
+          console.error(error);
+          throw error;
+          displayPopup("popup-failed")
+        }
     }
     // <!--    Cancel-->
     function cancel() {
       document.getElementById("modal-container").style.display = "none";
+    }
+    function displayPopup(popupId){
+      document.getElementById('modal-container').style.display = 'block';
+      Array.from(document.getElementsByClassName("popup")).forEach(popup => popup.style.display = 'none');
+      document.getElementById(popupId).style.display = 'block';
+    }
+    function showLoading() {
+      document.getElementById("loading").style.display = "block";
+    }
+
+    function hideLoading() {
+      document.getElementById("loading").style.display = "none";
     }
   </script>
 </body>

@@ -1,15 +1,26 @@
 package com.example.landingpagecareplus.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ConfirmOTPResponse {
+    @JsonProperty("errorMessage")
     private String errorMessage;
+    @JsonProperty("errorCode")
     private String errorCode;
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
 }
