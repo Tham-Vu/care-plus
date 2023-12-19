@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Mulish:wght@300&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
     :root {
       --background-form-color: rgb(226, 246, 255);
@@ -38,6 +38,10 @@
     }
 
     ul {
+      padding: 0px;
+    }
+
+    .nav-items {
       display: flex;
       justify-content: center;
       padding: 0px;
@@ -77,11 +81,50 @@
       column-gap: 40px;
     }
 
+    .nav-items a {
+      font-size: 20px;
+    }
+
     .nav-toggle {
       width: 24px;
       height: 24px;
-      margin-left: 20px;
+      margin: 0px 20px;
       display: none;
+      position: relative;
+    }
+
+    .nav-toggle img {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 600px) {
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-items {
+        display: none;
+      }
+
+    }
+
+    .popup-menu {
+      width: 360px;
+      position: absolute;
+      right: 0px;
+      display: none;
+      border-radius: 10px;
+      box-shadow: var(--background-form-shadow);
+    }
+
+    .nav-toggle-items li {
+      margin: 5px 0px;
+    }
+
+    .nav-toggle-items a {
+      font-size: 16px;
     }
 
     .logo {
@@ -281,7 +324,9 @@
     }
 
     #phone,
-    #otp-code, #name, #dateOfBirth {
+    #otp-code,
+    #name,
+    #dateOfBirth {
       width: 416px;
       height: 19px;
       padding: 18.5px 14px;
@@ -343,9 +388,11 @@
       border: 1px solid var(--button-background-color);
       color: var(--button-background-color);
     }
-    .loading-container{
+
+    .loading-container {
       display: none;
     }
+
     .loading {
       position: fixed;
       top: 0;
@@ -372,6 +419,7 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
@@ -387,36 +435,27 @@
     <div class="nav-container">
       <nav>
         <ul class="nav-items">
-          <li class="services"><a href="">GÓI KHÁM</a></li>
-          <li class="doctors"><a href="">BÁC SĨ</a></li>
-          <li class="address"><a href="">ĐỊA CHỈ</a></li>
-          <li class="feedback"><a href="">PHẢN HỒI</a></li>
+          <li class="services"><a href="#">GÓI KHÁM</a></li>
+          <li class="doctors"><a href="#">BÁC SĨ</a></li>
+          <li class="address"><a href="#">ĐỊA CHỈ</a></li>
+          <li class="feedback"><a href="#">PHẢN HỒI</a></li>
         </ul>
       </nav>
       <button class="consult-button" id="consult-button" onclick="togglePopup()">
         TƯ VẤN NGAY
       </button>
       <div class="nav-toggle">
-        <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
-          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
-          xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-          xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px"
-          viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%" class="" fill="rgba(0, 0, 0, 1)">
-          <g transform="translate(0,-952.36218)">
-            <path style="
-                  text-indent: 0;
-                  text-transform: none;
-                  direction: ltr;
-                  block-progression: tb;
-                  baseline-shift: baseline;
-                  color: #000000;
-                  enable-background: accumulate;
-                "
-              d="m 17.29343,976.00469 a 3.0040663,3.0040663 0 1 0 0.3125,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0,23.375 a 3.0040663,3.0040663 0 1 0 0.3125,6.00001 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6.00001 l -64.90625,0 a 3.0003,3.0003 0 0 0 -0.3125,0 z m 0.3125,23.34371 a 3.0003,3.0003 0 1 0 0,6 l 64.90625,0 a 3.0003,3.0003 0 1 0 0,-6 l -64.90625,0 z"
-              fill-opacity="1" fill-rule="nonzero" stroke="none" marker="none" visibility="visible" display="inline"
-              overflow="visible"></path>
-          </g>
-        </svg>
+        <img th:src="@{/assets/toggle-icon.svg}" alt="menu" onclick="toggleMenu()">
+        <div class="popup-menu" id="popupMenu">
+          <nav>
+            <ul class="nav-toggle-items">
+              <li class="services"><a href="#">Gói khám</a></li>
+              <li class="doctors"><a href="#">Bác sĩ</a></li>
+              <li class="address"><a href="#">Địa chỉ</a></li>
+              <li class="feedback"><a href="#">Phản hồi</a></li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </header>
@@ -506,12 +545,13 @@
           </div>
         </div>
         <div class="phone-input-container">
-          <input required type="text" name="name" id="name" placeholder="Họ và tên" aria-invalid="true"
-            inputmode="text" value />
+          <input required type="text" name="name" id="name" placeholder="Họ và tên" aria-invalid="true" inputmode="text"
+            value />
           <p class="warning invalid-otp-warning">Kiểm tra lại họ và tên của bạn</p>
           <div class="popup-form-button-group">
             <buton class="popup-form-btn cancel-button" id="name-cancel-button" onclick="cancel()">Huỷ</buton>
-            <buton class="popup-form-btn send-button" id="name-continue-button" onclick="fillDateOfBirth()">Tiếp tục</buton>
+            <buton class="popup-form-btn send-button" id="name-continue-button" onclick="fillDateOfBirth()">Tiếp tục
+            </buton>
           </div>
         </div>
       </div>
@@ -526,24 +566,25 @@
         </div>
         <div class="phone-input-container">
           <input required type="date" name="dateOfBirth" id="dateOfBirth" placeholder="DD/mm/yyyy" aria-invalid="true"
-           value />
+            value />
           <p class="warning invalid-otp-warning">Kiểm tra lại ngày sinh của bạn</p>
           <div class="popup-form-button-group">
             <buton class="popup-form-btn cancel-button" id="dateOfBirth-cancel-button" onclick="cancel()">Huỷ</buton>
-            <buton class="popup-form-btn send-button" id="dateOfBirth-continue-button" onclick="confirm()">Tiếp tục</buton>
+            <buton class="popup-form-btn send-button" id="dateOfBirth-continue-button" onclick="confirm()">Tiếp tục
+            </buton>
           </div>
         </div>
       </div>
     </div>
     <div class="popup popup-success" id="popup-success">
       <div class="popup-success-container">
-        <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
+        <img th:src="@{/assets/cirle-check.svg}" alt="check">
         <p>Đăng ký thành công</p>
       </div>
     </div>
     <div class="popup popup-success" id="popup-failed">
       <div class="popup-success-container">
-        <img th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="">
+        <img th:src="@{/assets/cirle-check.svg}" alt="check">
         <p>Có lỗi xảy ra</p>
       </div>
     </div>
@@ -553,6 +594,19 @@
     let otpCode = "";
     let phoneInputForm = document.getElementById("phone");
     let otpCodeInput = document.getElementById("otp-code");
+    function toggleMenu() {
+      var popupMenu = document.getElementById("popupMenu");
+
+      if (popupMenu.style.display === "block") {
+        popupMenu.style.display = "none";
+        popupMenu.style.opacity = "0";
+        popupMenu.style.transform = "translateY(-10px)";
+      } else {
+        popupMenu.style.display = "block";
+        popupMenu.style.opacity = "1";
+        popupMenu.style.transform = "translateY(0)";
+      }
+    }
     window.addEventListener('DOMContentLoaded', function () {
       var myElement = document.getElementById('modal-container');
       var pageHeight = Math.max(
@@ -573,6 +627,21 @@
     function offModal() {
       document.getElementById('modal-container').style.display = 'none';
     }
+    // Lắng nghe sự kiện click trên cả trang
+    document.addEventListener('click', function (event) {
+      var popupMenu = document.getElementById('popupMenu');
+      var navToggle = document.querySelector('.nav-toggle');
+
+      if (!navToggle.contains(event.target)) {
+        // Kiểm tra nếu sự kiện click không xuất phát từ nav-toggle
+        if (!popupMenu.contains(event.target)) {
+          // Kiểm tra nếu sự kiện click không xuất phát từ menu popup
+          popupMenu.style.display = 'none';
+          popupMenu.style.opacity = '0';
+          popupMenu.style.transform = 'translateY(-10px)';
+        }
+      }
+    });
     function togglePopup() {
       console.log("isClick");
       phoneInputForm.value = '';
@@ -592,15 +661,11 @@
       if (phoneInput !== '') {
         try {
           showLoading();
-
           const createOTPResponse = await createOTP(data);
-          console.log("createOTPResponse", createOTPResponse);
-
-          const otpCode = await sendOTP(data.phone_number);
-          console.log("otpCode", otpCode);
-
-          hideLoading(); 
-        }catch(error){
+          const sendOTPResponse = await sendOTP(data.phone_number);
+          otpCode = sendOTPResponse.otp;
+          hideLoading();
+        } catch (error) {
           console.error(error);
           throw error;
           displayPopup("popup-failed");
@@ -614,17 +679,16 @@
 
     // <!--     tạo OTP bằng số điện thoại -->
     async function createOTP(data) {
-      console.log("data", data)
       try {
         const response = await fetch('http://localhost:8080/api/v1/package/register', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json'
-          }, 
+          },
           body: JSON.stringify(data)
         })
         return response;
-      }catch(error){
+      } catch (error) {
         console.error(error);
         throw error;
       }
@@ -632,35 +696,33 @@
 
     // <!--    Gưi mã OTP đến phoneNum-->
     async function sendOTP(phoneNumber) {
-      try{
-        console.log('phoneNumber', phoneNumber)
+      try {
         let data = {
           'msisdn': phoneNumber
         }
-        console.log("data", data)
         const otpResponse = await fetch('http://localhost:8080/api/v1/sps/internal/package/getOTP', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json'
           }, body: JSON.stringify(data)
-        });
+        }).then(response => response.json())
         return otpResponse;
-      }catch(error){
+      } catch (error) {
         console.error(error);
         throw error;
       }
     }
-    
+
 
     // <!--    confirm OTP-->
-    function confirmOTP(){
+    function confirmOTP() {
       const otpInput = document.getElementById("otp-code").value;
       let phone = sessionStorage.getItem("phoneInput")
-      if (otpInput === ''|| otpInput !== '1111'){
+      if (otpInput === '' || otpInput !== otpCode) {
         document.getElementById("wrong-otp-warning").style.display = 'block'
-      }else{
+      } else {
         let data = {
-          "phone_number" : phone,
+          "phone_number": phone,
           "otp": otpInput
         }
         fetch('http://localhost:8080/api/v1/package/confirm', {
@@ -676,61 +738,7 @@
         })
       }
     }
-    // function checkAndSaveOTP() {
-    //   let otpInput = document.getElementById("otp-code").value;
-    //   let user;
-    //   if (popupOrigin === 'register-now') {
-    //     console.log('register-now');
-    //     let nameInput = document.getElementById("input-name").value;
-    //     let serviceInput = document.getElementById("input-service").value;
-    //     let phoneInput = document.getElementById("input-phone").value;
-    //     user = {
-    //       name: nameInput,
-    //       phoneNumber: phoneInput,
-    //       otpCode: otpInput,
-    //       services: serviceInput
-    //     }
-    //   } else if (popupOrigin === 'phone-popup') {
-    //     console.log('phone-popup')
-    //     let phone = document.getElementById("phone").value;
-    //     user = {
-    //       phoneNumber: phone,
-    //       otpCode: otpCode,
-    //     }
-    //   }
-    //   console.log(user);
-    //   if (otpInput === otpCode) {
-    //     saveUserData(user);
-    //   } else {
-    //     document.getElementById("wrong-otp-warning").style.display = 'block';
-    //     document.getElementById('otp-code').value = '';
-    //   }
-    // }
-    // <!--    Lưu dữ liệu vào database-->
-    // function saveUserData(data) {
-    //   fetch('http://localhost:8080/create-user', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    //   })
-    //     .then(response => {
-    //       if (response.ok) {
-    //         console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
-    //         document.getElementById("popup-success").style.display = 'block';
-    //         document.getElementById("popup-failed").style.display = 'none';
-    //         document.getElementById("popup-enter-otp").style.display = 'none';
-    //       } else {
-    //         document.getElementById("popup-success").style.display = 'none';
-    //         document.getElementById("popup-failed").style.display = 'none';
-    //         document.getElementById("popup-enter-otp").style.display = 'block';
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.error('Lỗi:', error);
-    //     });
-    // }
+
     async function registerNow(origin) {
       let nameInput = document.getElementById("input-name").value;
       let phoneInput = document.getElementById("input-phone").value;
@@ -744,50 +752,47 @@
         sessionStorage.setItem("data", JSON.stringify(data))
         try {
           const createOTPResponse = await createOTP(data);
-          console.log("createOTPResponse", createOTPResponse);
           const otpCode = await sendOTP(data.phone_number);
-          console.log("otpCode", otpCode);
-        }catch(error){
+        } catch (error) {
           console.error(error);
           throw error;
           displayPopup("popup-failed");
         }
         displayPopup("popup-enter-otp")
-      }else{
+      } else {
         displayPopup("popup-failed");
       }
     }
-    function fillDateOfBirth(){
+    function fillDateOfBirth() {
       displayPopup("popup-enter-dateOfBirth");
     }
-    function confirm(){
+    function confirm() {
+      //save user data
       displayPopup("popup-success")
     }
     // <!--    Resend-->
     async function resendOTP() {
       let phone = sessionStorage.getItem("phoneInput");
       let sessionData = sessionStorage.getItem("data");
-      console.log("phone", phone);
       let data = {
         "phone_number": phone,
         "package": sessionData.package_name
       }
       try {
-          const createOTPResponse = await createOTP(data);
-          console.log("createOTPResponse", createOTPResponse);
-          const otpCode = await sendOTP(data.phone_number);
-          console.log("otpCode", otpCode);
-        }catch(error){
-          console.error(error);
-          throw error;
-          displayPopup("popup-failed")
-        }
+        const createOTPResponse = await createOTP(data);
+        const sendOTPResponse = await sendOTP(data.phone_number);
+        otpCode = sendOTPResponse.otp;
+      } catch (error) {
+        console.error(error);
+        throw error;
+        displayPopup("popup-failed")
+      }
     }
     // <!--    Cancel-->
     function cancel() {
       document.getElementById("modal-container").style.display = "none";
     }
-    function displayPopup(popupId){
+    function displayPopup(popupId) {
       document.getElementById('modal-container').style.display = 'block';
       Array.from(document.getElementsByClassName("popup")).forEach(popup => popup.style.display = 'none');
       document.getElementById(popupId).style.display = 'block';
