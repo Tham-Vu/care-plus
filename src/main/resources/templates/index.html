@@ -117,6 +117,7 @@
       display: none;
       border-radius: 10px;
       box-shadow: var(--background-form-shadow);
+      z-index: 1;
     }
 
     .nav-toggle-items li {
@@ -201,7 +202,7 @@
 
     .register-form-container {
       position: absolute;
-      bottom: -165px;
+      bottom: -160px;
       background: var(--background-form-color);
       box-shadow: var(--background-form-shadow);
       border-radius: 10px;
@@ -424,6 +425,11 @@
         transform: rotate(360deg);
       }
     }
+
+    .notification-icon {
+      width: 100px;
+      height: 100px;
+    }
   </style>
 </head>
 
@@ -450,7 +456,8 @@
           <nav>
             <ul class="nav-toggle-items">
               <li class="services"><a href="#">Gói khám</a></li>
-              <li class="doctors"><a href="#">Bác sĩ</a></li>
+              <li class="doctors"><a
+                  th:href="@{https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1}">Bác sĩ</a></li>
               <li class="address"><a href="#">Địa chỉ</a></li>
               <li class="feedback"><a href="#">Phản hồi</a></li>
             </ul>
@@ -468,10 +475,20 @@
       </div>
       <div class="form-container">
         <form action="submit">
-          <input class="input" required type="text" name="input-name" id="input-name" placeholder="Tên*" />
-          <input class="input" required type="number" name="input-phone" id="input-phone"
-            placeholder="Số điện thoại*" />
-          <input class="input" type="text" name="input-service" id="input-service" placeholder="Dịch vụ quan tâm" />
+          <div>
+            <p class="warning invalid-register-name-warning" id="invalid-register-name-warning">Vui lòng kiểm tra lại họ
+              và tên (Chỉ bao gồm chữ và dấu)</p>
+            <input style="width: 295px;" class="input" required type="text" name="input-name" id="input-name"
+              placeholder="Tên*" />
+          </div>
+          <div>
+            <p class="warning invalid-register-phone-warning" id="invalid-register-phone-warning">Vui lòng kiểm tra lại
+              số điện thoại</p>
+            <input style="width: 295px;" class="input" required type="number" name="input-phone" id="input-phone"
+              placeholder="Số điện thoại*" />
+          </div>
+          <input style="width: 295px;" class="input" type="text" name="input-service" id="input-service"
+            placeholder="Dịch vụ quan tâm" />
         </form>
         <button class="register-button" type="submit" onclick="registerNow('register-now')">ĐĂNG KÝ NGAY</button>
         <p style="margin-left: auto; margin-right: auto; font-style: italic">
@@ -547,16 +564,16 @@
         <div class="phone-input-container">
           <input required type="text" name="name" id="name" placeholder="Họ và tên" aria-invalid="true" inputmode="text"
             value />
-          <p class="warning invalid-otp-warning">Kiểm tra lại họ và tên của bạn</p>
+          <p class="warning invalid-otp-warning" id="invalid-popup-name-warning">Kiểm tra lại họ và tên của bạn</p>
           <div class="popup-form-button-group">
             <buton class="popup-form-btn cancel-button" id="name-cancel-button" onclick="cancel()">Huỷ</buton>
-            <buton class="popup-form-btn send-button" id="name-continue-button" onclick="fillDateOfBirth()">Tiếp tục
+            <buton class="popup-form-btn send-button" id="name-continue-button" onclick="fillFullName()">Tiếp tục
             </buton>
           </div>
         </div>
       </div>
     </div>
-    <div class="popup popup-enter-dateOfBirth" id="popup-enter-dateOfBirth">
+    <div class="popup popup-enter-dateOfBirth" id="popup-enter-dateOfBirth" style="display: none;">
       <div class="popup-container">
         <div class="phone-graphic-header">
           <img class="logo-graphic" th:src="@{/assets/careplus-logo-2x-20201001040102.png}" alt="phone" />
@@ -570,7 +587,8 @@
           <p class="warning invalid-otp-warning">Kiểm tra lại ngày sinh của bạn</p>
           <div class="popup-form-button-group">
             <buton class="popup-form-btn cancel-button" id="dateOfBirth-cancel-button" onclick="cancel()">Huỷ</buton>
-            <buton class="popup-form-btn send-button" id="dateOfBirth-continue-button" onclick="confirm()">Tiếp tục
+            <buton class="popup-form-btn send-button" id="dateOfBirth-continue-button" onclick="fillDateOfBirth()">Tiếp
+              tục
             </buton>
           </div>
         </div>
@@ -578,13 +596,13 @@
     </div>
     <div class="popup popup-success" id="popup-success">
       <div class="popup-success-container">
-        <img th:src="@{/assets/cirle-check.svg}" alt="check">
+        <img class="notification-icon" th:src="@{/assets/circle-check.svg}" alt="check">
         <p>Đăng ký thành công</p>
       </div>
     </div>
     <div class="popup popup-success" id="popup-failed">
       <div class="popup-success-container">
-        <img th:src="@{/assets/cirle-check.svg}" alt="check">
+        <img class="notification-icon" th:src="@{/assets/circle-xmark.svg}" alt="check">
         <p>Có lỗi xảy ra</p>
       </div>
     </div>
@@ -592,8 +610,34 @@
   <script lang="javascript">
     let popupOrigin = "";
     let otpCode = "";
+    var namePattern = /^[a-zA-Z\s]+$/;
+    var validPrefixes = [
+      "03", "05", "07", "08", // MobiFone, Vietnamobile, Vinaphone, Viettel
+      "09",                   // MobiFone, Vinaphone, Viettel
+      "01[2-9]",              // Vietnamobile
+      "020", "021", "022",    // Vietnamobile
+      "056", "058",           // Viettel
+      "032", "033", "034",    // Viettel
+      "035", "036", "037",    // Viettel
+      "038", "039",           // Viettel
+      "052", "056", "058",    // Viettel
+      "070", "076", "077",    // Mobifone
+      "078", "079",           // Mobifone
+      "083", "084", "085",    // Vinaphone
+      "081", "082",           // Vinaphone
+      "056", "058",           // Viettel
+    ];
+    var prefixPattern = "^(" + validPrefixes.join("|") + ")";
+    var phonePattern = new RegExp(prefixPattern + "\\d{8,}$");
+
     let phoneInputForm = document.getElementById("phone");
     let otpCodeInput = document.getElementById("otp-code");
+    document.getElementById('input-name').addEventListener("change", function () {
+      validationInput(namePattern, 'input-name', 4, 'invalid-register-name-warning')
+    });
+    document.getElementById('input-phone').addEventListener("change", function () {
+      validationInput(phonePattern, 'input-phone', 9, 'invalid-register-phone-warning')
+    });
     function toggleMenu() {
       var popupMenu = document.getElementById("popupMenu");
 
@@ -652,27 +696,33 @@
     <!--    băt đầu gửi mã OTP-->
     async function startVerification() {
       let phoneInput = document.getElementById('phone').value;
-      sessionStorage.setItem("phoneInput", phoneInput);
-      let data = {
-        'phone_number': phoneInput,
-        'package_name': null
-      }
-      sessionStorage.setItem("data", JSON.stringify(data))
-      if (phoneInput !== '') {
-        try {
-          showLoading();
-          const createOTPResponse = await createOTP(data);
-          const sendOTPResponse = await sendOTP(data.phone_number);
-          otpCode = sendOTPResponse.otp;
-          hideLoading();
-        } catch (error) {
-          console.error(error);
-          throw error;
-          displayPopup("popup-failed");
+      if (validationInput(phonePattern, 'phone', 9, 'invalid-phone-warning')) {
+        sessionStorage.setItem("phoneInput", phoneInput);
+        let data = {
+          'phone_number': phoneInput,
+          'package_name': 'V40K'
         }
-        displayPopup("popup-enter-otp")
-      } else {
-        document.getElementById("invalid-phone-warning").style.display = 'block';
+        let user = {
+          "full_name": null,
+          "phone_number": phoneInput,
+          "services": null
+        }
+        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("data", JSON.stringify(data))
+        if (phoneInput !== '') {
+          try {
+            const createOTPResponse = await createOTP(data);
+            const sendOTPResponse = await sendOTP(data.phone_number);
+            otpCode = sendOTPResponse.otp;
+          } catch (error) {
+            console.error(error);
+            throw error;
+            displayPopup("popup-failed");
+          }
+          displayPopup("popup-enter-otp")
+        } else {
+          document.getElementById("invalid-phone-warning").style.display = 'block';
+        }
       }
       return otpCode;
     }
@@ -732,6 +782,13 @@
           },
           body: JSON.stringify(data)
         }).then(response => {
+          let user = sessionStorage.getItem("user");
+          if (user) {
+            user = JSON.parse(user);
+            if (user.full_name) {
+              document.getElementById("name").value = user.full_name;
+            }
+          }
           displayPopup("popup-enter-name");
         }).catch(error => {
           document.getElementById("popup-failed").style.display = 'block';
@@ -740,34 +797,67 @@
     }
 
     async function registerNow(origin) {
-      let nameInput = document.getElementById("input-name").value;
-      let phoneInput = document.getElementById("input-phone").value;
-      let serviceInput = document.getElementById("input-service").value;
-      sessionStorage.setItem("phoneInput", phoneInput)
-      if (phoneInput !== '') {
-        let data = {
-          "phone_number": phoneInput,
-          "package_name": serviceInput
-        }
-        sessionStorage.setItem("data", JSON.stringify(data))
-        try {
-          const createOTPResponse = await createOTP(data);
-          const otpCode = await sendOTP(data.phone_number);
-        } catch (error) {
-          console.error(error);
-          throw error;
+      let nameInput = document.getElementById("input-name");
+      let phoneInput = document.getElementById("input-phone");
+      let serviceInput = document.getElementById("input-service");
+      let nameValue = nameInput.value.trim();
+      let phoneValue = phoneInput.value.trim();
+      let serviceValue = serviceInput.value.trim();
+      if (validationInput(namePattern, 'input-name', 4, 'invalid-register-name-warning') && validationInput(phonePattern, 'input-phone', 9, 'invalid-register-phone-warning')) {
+        sessionStorage.setItem("phoneInput", phoneValue)
+        if (phoneInput !== '') {
+          let data = {
+            "phone_number": phoneValue,
+            "package_name": 'V40K'
+          }
+          sessionStorage.setItem("data", JSON.stringify(data))
+          let user = {
+            "full_name": nameValue,
+            "phone_number": phoneValue,
+            "services": serviceValue
+          }
+          sessionStorage.setItem("user", JSON.stringify(user));
+          try {
+            const createOTPResponse = await createOTP(data);
+            const sendOTPResponse = await sendOTP(data.phone_number);
+            otpCode = sendOTPResponse.otp;
+          } catch (error) {
+            console.error(error);
+            throw error;
+            displayPopup("popup-failed");
+          }
+          displayPopup("popup-enter-otp")
+        } else {
           displayPopup("popup-failed");
         }
-        displayPopup("popup-enter-otp")
-      } else {
-        displayPopup("popup-failed");
+      }
+    }
+    function fillFullName() {
+      if (validationInput(namePattern, 'name', 4, 'invalid-popup-name-warning')) {
+        let user = sessionStorage.getItem("user");
+        if (user) {
+          user = JSON.parse(user);
+          user.full_name = document.getElementById("name").value
+        }
+        sessionStorage.setItem("user", JSON.stringify(user));
+        // displayPopup("popup-enter-dateOfBirth");
+        console.log("user", user);
+        // sessionStorage.clear();
+        displayPopup("popup-success");
       }
     }
     function fillDateOfBirth() {
-      displayPopup("popup-enter-dateOfBirth");
-    }
-    function confirm() {
       //save user data
+      let dateOfBirthInput = document.getElementById("dateOfBirth").value;
+      let user = sessionStorage.getItem("user");
+      if (user) {
+        user = JSON.parse(user);
+        user.date_of_birth = dateOfBirthInput;
+      }
+      sessionStorage.setItem("user", JSON.stringify(user))
+      //save user data
+      console.log("user", user);
+      sessionStorage.clear();
       displayPopup("popup-success")
     }
     // <!--    Resend-->
@@ -803,6 +893,18 @@
 
     function hideLoading() {
       document.getElementById("loading").style.display = "none";
+    }
+    function validationInput(pattern, elementId, lenght, warning) {
+      let input = document.getElementById(elementId);
+      let inputValue = input.value.trim();
+
+      if (pattern.test(inputValue) && inputValue.length >= lenght) {
+        document.getElementById(warning).style.display = 'none';
+        return true;
+      } else {
+        document.getElementById(warning).style.display = 'block';
+        return false;
+      }
     }
   </script>
 </body>

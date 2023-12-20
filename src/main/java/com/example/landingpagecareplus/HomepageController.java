@@ -11,51 +11,26 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 import com.google.gson.Gson;
 
 @Controller
 public class HomepageController {
-    private final UserService userService;
-    private final WebClient webClient;
-
-    public HomepageController(UserService userService, WebClient webClient) {
-        this.userService = userService;
-        this.webClient = webClient;
-    }
-
-    @RequestMapping(value = {"/", "/homepage"}, method = RequestMethod.GET)
-    public String homepage(Model model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
-        return "index";
-    }
-    @PostMapping("/create-user")
-    public String createUser(@RequestBody User inputUser){
-        User user = userService.findByPhoneNumber(inputUser.getPhoneNumber());
-        if (user == null){
-            user = new User();
-        }else {
-            user.setId(user.getId());
-        }
-        user.setName(inputUser.getName());
-        user.setOtpCode(inputUser.getOtpCode());
-        user.setServices(inputUser.getServices());
-        user.setPhoneNumber(inputUser.getPhoneNumber());
-        User newUser = userService.save(user);
-        System.out.println(newUser.toString());
-        return "redirect:/homepage";
-    }
+    @Value("${ssh.host}")
+    private String host;
+    @Value("${ssh.username}")
+    private String username;
+    @Value("${ssh.password}")
+    private String password;
+    @Value("${ssh.port}")
+    private int port;
     @PostMapping("/api/v1/package/register")
     public @ResponseBody CreateOTPByPhoneResponse createOTPByPhoneNumber(@RequestBody CreateOTPByPhoneDTO data){
         Gson gson = new Gson();
@@ -82,10 +57,6 @@ public class HomepageController {
         return confirmOTPResponse;
     }
     private String connectSSHServer(String data, String api){
-        String host = "10.144.13.155";
-        String username = "root";
-        String password = "6#Zh$$f0G3Q$ll$a";
-        int port = 22;
         Session session = null;
         ChannelExec channel = null;
         String response = null;
