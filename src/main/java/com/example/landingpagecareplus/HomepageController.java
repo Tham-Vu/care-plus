@@ -3,15 +3,19 @@ package com.example.landingpagecareplus;
 import com.example.landingpagecareplus.dto.ConfirmOTPDTO;
 import com.example.landingpagecareplus.dto.CreateOTPByPhoneDTO;
 import com.example.landingpagecareplus.dto.GetOTPDTO;
+import com.example.landingpagecareplus.dto.UserPackageDTO;
 import com.example.landingpagecareplus.dto.response.ConfirmOTPResponse;
 import com.example.landingpagecareplus.dto.response.CreateOTPByPhoneResponse;
-import com.example.landingpagecareplus.dto.response.GetOTPResponse;
+
 import com.example.landingpagecareplus.dto.response.GetOTPSuccessResponse;
+import com.example.landingpagecareplus.entity.UserPackage;
+import com.example.landingpagecareplus.service.UserService;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +35,16 @@ public class HomepageController {
     private String password;
     @Value("${ssh.port}")
     private int port;
+    private final UserService userService;
+
+    public HomepageController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/create-user")
+    public @ResponseBody ResponseEntity<UserPackage> createUser(@RequestBody UserPackageDTO userPackageDTO){
+        return ResponseEntity.ok().body(userService.createUserAndUserPackage(userPackageDTO));
+    }
     @PostMapping("/api/v1/package/register")
     public @ResponseBody CreateOTPByPhoneResponse createOTPByPhoneNumber(@RequestBody CreateOTPByPhoneDTO data){
         Gson gson = new Gson();

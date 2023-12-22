@@ -441,10 +441,10 @@
     <div class="nav-container">
       <nav>
         <ul class="nav-items">
-          <li class="services"><a href="#">GÓI KHÁM</a></li>
-          <li class="doctors"><a href="#">BÁC SĨ</a></li>
-          <li class="address"><a href="#">ĐỊA CHỈ</a></li>
-          <li class="feedback"><a href="#">PHẢN HỒI</a></li>
+          <li class="services"><a href="/">GÓI KHÁM</a></li>
+          <li class="doctors"><a href="/">BÁC SĨ</a></li>
+          <li class="address"><a href="/">ĐỊA CHỈ</a></li>
+          <li class="feedback"><a href="/">PHẢN HỒI</a></li>
         </ul>
       </nav>
       <button class="consult-button" id="consult-button" onclick="togglePopup()">
@@ -456,8 +456,7 @@
           <nav>
             <ul class="nav-toggle-items">
               <li class="services"><a href="#">Gói khám</a></li>
-              <li class="doctors"><a
-                  th:href="@{https://mvnrepository.com/artifact/com.google.code.gson/gson/2.10.1}">Bác sĩ</a></li>
+              <li class="doctors"><a href="#">Bác sĩ</a></li>
               <li class="address"><a href="#">Địa chỉ</a></li>
               <li class="feedback"><a href="#">Phản hồi</a></li>
             </ul>
@@ -608,6 +607,7 @@
     </div>
   </div>
   <script lang="javascript">
+    const appName = "CARE_PLUS_LP"
     let popupOrigin = "";
     let otpCode = "";
     var namePattern = /^[a-zA-Z\s]+$/;
@@ -700,12 +700,12 @@
         sessionStorage.setItem("phoneInput", phoneInput);
         let data = {
           'phone_number': phoneInput,
-          'package_name': 'V40K'
+          'app_name': appName
         }
         let user = {
-          "full_name": null,
-          "phone_number": phoneInput,
-          "services": null
+          "fullName": null,
+          "phoneNumber": phoneInput,
+          "packages": null
         }
         sessionStorage.setItem("user", JSON.stringify(user));
         sessionStorage.setItem("data", JSON.stringify(data))
@@ -748,7 +748,8 @@
     async function sendOTP(phoneNumber) {
       try {
         let data = {
-          'msisdn': phoneNumber
+          'msisdn': phoneNumber,
+          "app_name": appName
         }
         const otpResponse = await fetch('http://localhost:8080/api/v1/sps/internal/package/getOTP', {
           method: 'POST',
@@ -773,6 +774,7 @@
       } else {
         let data = {
           "phone_number": phone,
+          "app_name": appName,
           "otp": otpInput
         }
         fetch('http://localhost:8080/api/v1/package/confirm', {
@@ -785,13 +787,13 @@
           let user = sessionStorage.getItem("user");
           if (user) {
             user = JSON.parse(user);
-            if (user.full_name) {
-              document.getElementById("name").value = user.full_name;
+            if (user.fullName) {
+              document.getElementById("name").value = user.fullName;
             }
           }
           displayPopup("popup-enter-name");
         }).catch(error => {
-          document.getElementById("popup-failed").style.display = 'block';
+          displayPopup("popup-failed")
         })
       }
     }
@@ -808,13 +810,13 @@
         if (phoneInput !== '') {
           let data = {
             "phone_number": phoneValue,
-            "package_name": 'V40K'
+            "app_name": appName
           }
           sessionStorage.setItem("data", JSON.stringify(data))
           let user = {
-            "full_name": nameValue,
-            "phone_number": phoneValue,
-            "services": serviceValue
+            "fullName": nameValue,
+            "phoneNumber": phoneValue,
+            "packages": serviceValue
           }
           sessionStorage.setItem("user", JSON.stringify(user));
           try {
@@ -832,18 +834,36 @@
         }
       }
     }
-    function fillFullName() {
+    async function fillFullName() {
       if (validationInput(namePattern, 'name', 4, 'invalid-popup-name-warning')) {
         let user = sessionStorage.getItem("user");
         if (user) {
           user = JSON.parse(user);
-          user.full_name = document.getElementById("name").value
+          user.fullName = document.getElementById("name").value
         }
         sessionStorage.setItem("user", JSON.stringify(user));
-        // displayPopup("popup-enter-dateOfBirth");
-        console.log("user", user);
-        // sessionStorage.clear();
-        displayPopup("popup-success");
+        //save user info
+        try {
+          const response = await fetch("http://localhost:8080/create-user", {
+            method: 'POST',
+            headers: {
+              "Content-type": "application/json"
+            },
+            body: JSON.stringify(user)
+          }).then(response => {
+            //clear input
+            document.getElementById("input-name").value = "";
+            document.getElementById("input-phone").value = "";
+            document.getElementById("input-service").value = "";
+            document.getElementById("otp-code").value = "";
+            document.getElementById('phone').value = "";
+            document.getElementById("name").value = "";
+            // sessionStorage.clear();
+            displayPopup("popup-success");
+          })
+        } catch (error) {
+          console.error(error)
+        }
       }
     }
     function fillDateOfBirth() {
