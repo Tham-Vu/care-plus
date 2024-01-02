@@ -1,0 +1,20 @@
+services:
+  care-plus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_USERNAME=c##test_user3
+      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@localhost:1521/orcl
+    depends_on:
+      - oracle
+  oracle:
+    image: oraclelinux:8
+    ports:
+      - 1521:1521
+    environment:
+      - ORACLE_SID=orcl
+#      - ORACLE_PDB=1521
+      - ORACLE_PWD=password1

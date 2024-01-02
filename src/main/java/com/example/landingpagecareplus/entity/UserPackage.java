@@ -1,15 +1,17 @@
 package com.example.landingpagecareplus.entity;
 
 import com.example.landingpagecareplus.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
 public class UserPackage {
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
-    @SequenceGenerator(name = "id_Sequence", sequenceName = "USER_PACKAGE_ID_SEQ")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "user_package_id_Sequence")
+    @SequenceGenerator(name = "user_package_id_Sequence", sequenceName = "USER_PACKAGE_ID_SEQ", allocationSize=1)
     private Long id;
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

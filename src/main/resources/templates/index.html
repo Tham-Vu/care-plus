@@ -497,7 +497,7 @@
     </div>
   </section>
   <div class="modal-container" id="modal-container">
-    <div class="loading-container">
+    <div class="loading-container" id="loading-container">
       <div id="loading" class="loading">
         <div class="loading-spinner"></div>
       </div>
@@ -608,6 +608,7 @@
   </div>
   <script lang="javascript">
     const appName = "CARE_PLUS_LP"
+    const CONSULT = "Tư vấn"
     let popupOrigin = "";
     let otpCode = "";
     var namePattern = /^[a-zA-Z\s]+$/;
@@ -705,21 +706,23 @@
         let user = {
           "fullName": null,
           "phoneNumber": phoneInput,
-          "packages": null
+          "packages": CONSULT
         }
         sessionStorage.setItem("user", JSON.stringify(user));
         sessionStorage.setItem("data", JSON.stringify(data))
         if (phoneInput !== '') {
           try {
+            showLoading();
             const createOTPResponse = await createOTP(data);
             const sendOTPResponse = await sendOTP(data.phone_number);
             otpCode = sendOTPResponse.otp;
+            hideLoading();
           } catch (error) {
             console.error(error);
-            throw error;
             displayPopup("popup-failed");
+            throw error;
           }
-          displayPopup("popup-enter-otp")
+          displayPopup("popup-enter-otp");
         } else {
           document.getElementById("invalid-phone-warning").style.display = 'block';
         }
@@ -766,18 +769,19 @@
 
 
     // <!--    confirm OTP-->
-    function confirmOTP() {
+    async function confirmOTP() {
       const otpInput = document.getElementById("otp-code").value;
       let phone = sessionStorage.getItem("phoneInput")
-      if (otpInput === '' || otpInput !== otpCode) {
-        document.getElementById("wrong-otp-warning").style.display = 'block'
-      } else {
+<!--      if (otpInput === '' || otpInput !== otpCode) {-->
+<!--        document.getElementById("wrong-otp-warning").style.display = 'block'-->
+<!--      } else {-->
         let data = {
           "phone_number": phone,
           "app_name": appName,
           "otp": otpInput
         }
-        fetch('http://localhost:8080/api/v1/package/confirm', {
+        showLoading();
+        await fetch('http://localhost:8080/api/v1/package/confirm', {
           method: 'POST',
           headers: {
             "Content-type": "application/json"
@@ -791,11 +795,12 @@
               document.getElementById("name").value = user.fullName;
             }
           }
+          hideLoading();
           displayPopup("popup-enter-name");
         }).catch(error => {
           displayPopup("popup-failed")
         })
-      }
+<!--      }-->
     }
 
     async function registerNow(origin) {
@@ -820,13 +825,15 @@
           }
           sessionStorage.setItem("user", JSON.stringify(user));
           try {
+            showLoading();
             const createOTPResponse = await createOTP(data);
             const sendOTPResponse = await sendOTP(data.phone_number);
             otpCode = sendOTPResponse.otp;
+            hideLoading();
           } catch (error) {
             console.error(error);
-            throw error;
             displayPopup("popup-failed");
+            throw error;
           }
           displayPopup("popup-enter-otp")
         } else {
@@ -844,6 +851,7 @@
         sessionStorage.setItem("user", JSON.stringify(user));
         //save user info
         try {
+          showLoading();
           const response = await fetch("http://localhost:8080/create-user", {
             method: 'POST',
             headers: {
@@ -851,6 +859,7 @@
             },
             body: JSON.stringify(user)
           }).then(response => {
+            hideLoading();
             //clear input
             document.getElementById("input-name").value = "";
             document.getElementById("input-phone").value = "";
@@ -886,7 +895,7 @@
       let sessionData = sessionStorage.getItem("data");
       let data = {
         "phone_number": phone,
-        "package": sessionData.package_name
+        "app_name": appName
       }
       try {
         const createOTPResponse = await createOTP(data);
@@ -895,7 +904,6 @@
       } catch (error) {
         console.error(error);
         throw error;
-        displayPopup("popup-failed")
       }
     }
     // <!--    Cancel-->
@@ -908,11 +916,11 @@
       document.getElementById(popupId).style.display = 'block';
     }
     function showLoading() {
-      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading-container").style.display = "block";
     }
 
     function hideLoading() {
-      document.getElementById("loading").style.display = "none";
+      document.getElementById("loading-container").style.display = "none";
     }
     function validationInput(pattern, elementId, lenght, warning) {
       let input = document.getElementById(elementId);

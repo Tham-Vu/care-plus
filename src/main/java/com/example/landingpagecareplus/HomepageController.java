@@ -23,6 +23,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Base64;
+import java.util.logging.Logger;
+
 import com.google.gson.Gson;
 
 @Controller
@@ -59,6 +62,8 @@ public class HomepageController {
         String jsonBody = gson.toJson(data);
         String response = connectSSHServer(jsonBody, "http://10.144.26.57:7013/api/v1/sps/internal/package/getOTP");
         GetOTPSuccessResponse responseObject = gson.fromJson(response, GetOTPSuccessResponse.class);
+        System.out.println(responseObject.getOtp());
+        responseObject.setOtp(Base64.getEncoder().encodeToString(responseObject.getOtp().getBytes()));
         return responseObject;
     }
 
