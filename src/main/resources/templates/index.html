@@ -118,6 +118,7 @@
       border-radius: 10px;
       box-shadow: var(--background-form-shadow);
       z-index: 1;
+      background: white;
     }
 
     .nav-toggle-items li {
@@ -443,7 +444,7 @@
         <ul class="nav-items">
           <li class="services"><a href="/">GÓI KHÁM</a></li>
           <li class="doctors"><a href="/">BÁC SĨ</a></li>
-          <li class="address"><a href="/">ĐỊA CHỈ</a></li>
+          <li class="address"><a th:href="@{https://vnpt.com.vn/}">ĐỊA CHỈ</a></li>
           <li class="feedback"><a href="/">PHẢN HỒI</a></li>
         </ul>
       </nav>
@@ -457,7 +458,7 @@
             <ul class="nav-toggle-items">
               <li class="services"><a href="#">Gói khám</a></li>
               <li class="doctors"><a href="#">Bác sĩ</a></li>
-              <li class="address"><a href="#">Địa chỉ</a></li>
+              <li class="address"><a th:href="@{https://vnpt.com.vn/}">Địa chỉ</a></li>
               <li class="feedback"><a href="#">Phản hồi</a></li>
             </ul>
           </nav>
